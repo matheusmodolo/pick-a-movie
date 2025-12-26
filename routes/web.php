@@ -10,6 +10,10 @@ Route::get('/', function () {
     }
 })->name('home');
 
+Route::get('/about', function () {
+    return view('auth.passwords.reset');
+})->name('about');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
