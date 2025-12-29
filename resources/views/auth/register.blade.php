@@ -73,11 +73,11 @@
                         <label for="name" class="text-sm font-medium text-foreground">Nome</label>
                         <div class="relative">
                             {{-- User icon --}}
-                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                                <path d="M15 19l-3 2-3-2"></path>
-                                <path d="M12 15c4.418 0 8 2.686 8 6s-3.582 6-8 6-8-2.686-8-6 3.582-6 8-6z"></path>
-                                <path d="M12 12V9"></path>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="currentColor"
+                                stroke="none" stroke-width="1.5" aria-hidden="true" viewBox="0 0 640 640">
+                                <path
+                                    d="M240 192C240 147.8 275.8 112 320 112C364.2 112 400 147.8 400 192C400 236.2 364.2 272 320 272C275.8 272 240 236.2 240 192zM448 192C448 121.3 390.7 64 320 64C249.3 64 192 121.3 192 192C192 262.7 249.3 320 320 320C390.7 320 448 262.7 448 192zM144 544C144 473.3 201.3 416 272 416L368 416C438.7 416 496 473.3 496 544L496 552C496 565.3 506.7 576 520 576C533.3 576 544 565.3 544 552L544 544C544 446.8 465.2 368 368 368L272 368C174.8 368 96 446.8 96 544L96 552C96 565.3 106.7 576 120 576C133.3 576 144 565.3 144 552L144 544z" />
                             </svg>
 
                             <input id="name" name="name" type="text" value="{{ old('name') }}" required
