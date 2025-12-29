@@ -6,7 +6,7 @@
             <div class="p-8 rounded-3xl glass relative overflow-hidden">
                 {{-- Decoration --}}
                 <div class="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-red-500/10 rounded-full blur-3xl"></div>
                 {{-- Header --}}
                 <div class="flex items-center gap-3 mb-6">
                     {{-- Mail icon --}}
