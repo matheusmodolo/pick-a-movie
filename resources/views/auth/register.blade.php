@@ -11,16 +11,9 @@
             </div>
 
             <div class="relative text-center p-12">
-                {{-- Film icon --}}
-                {{-- <svg class="w-24 h-24 text-primary mx-auto mb-8 animate-pulse-glow" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                    <path d="M7 7v10M17 7v10"></path>
-                </svg> --}}
                 <x-logo class="w-28 h-28 text-primary mx-auto mb-8 animate-pulse-glow" />
 
                 {{-- Text --}}
-
                 <h2 class="font-display text-5xl text-foreground mb-4">JUNTE-SE A NÓS</h2>
                 <p class="text-gray-400 max-w-md">
                     Crie sua conta e comece a montar sua lista de filmes favoritos
@@ -34,14 +27,9 @@
                 {{-- Logo --}}
                 <a href="{{ route('home') }}" class="flex items-center gap-2 mb-12">
                     <div class="p-2 rounded-lg bg-primary/10">
-                        {{-- Film icon --}}
-                        <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" aria-hidden="true">
-                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                            <path d="M7 7v10M17 7v10"></path>
-                        </svg>
+                        <x-logo class="size-6 text-primary" />
                     </div>
-                    <span class="font-display text-2xl text-gradient">Pick a Movie</span>
+                    <span class="font-display text-2xl text-primary">Pick a Movie</span>
                 </a>
 
                 {{-- Header --}}

@@ -10,7 +10,7 @@
                     <div class="p-2 rounded-lg bg-primary/10">
                         <x-logo class="w-6 h-6 text-primary" />
                     </div>
-                    <span class="font-display text-2xl text-gradient">Pick a Movie</span>
+                    <span class="font-display text-2xl text-primary">Pick a Movie</span>
                 </a>
 
                 {{-- Header --}}
