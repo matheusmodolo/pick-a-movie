@@ -26,14 +26,14 @@
                     </div>
                 @endif
 
-                @if ($errors->any())
-                    <div class="mb-4 text-sm text-red-600">
+                {{-- @if ($errors->any())
+                    <div class="mb-4 text-sm text-red-600 bg-red-700/10 border border-red-700 p-3 rounded-lg">
                         Há problemas com os dados enviados. Verifique novamente.
                     </div>
-                @endif
+                @endif --}}
 
                 {{-- Form --}}
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <form method="POST" action="{{ route('login') }}" class="space-y-6" novalidate>
                     @csrf
 
                     {{-- Email --}}
@@ -52,10 +52,10 @@
                                 autofocus placeholder="seu@email.com"
                                 class="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
 
-                            @error('email')
-                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                            @enderror
                         </div>
+                        @error('email')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Password --}}
@@ -85,10 +85,10 @@
                                 </svg>
                             </button> --}}
 
-                            @error('password')
-                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                            @enderror
                         </div>
+                        @error('password')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Remember + Forgot --}}

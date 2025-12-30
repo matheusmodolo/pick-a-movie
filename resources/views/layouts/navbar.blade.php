@@ -5,11 +5,11 @@
             'label' => 'Minha Lista',
             'icon' => 'list',
         ],
-        [
-            'route' => 'merge',
-            'label' => 'Merge',
-            'icon' => 'users',
-        ],
+        // [
+        //     'route' => 'merge',
+        //     'label' => 'Merge',
+        //     'icon' => 'users',
+        // ],
     ];
 @endphp
 
@@ -25,7 +25,7 @@
                     <x-logo />
                 </div>
                 <span
-                    class="hidden sm:inline-block font-display text-2xl tracking-wide text-primary hover:text-amber-600/20 ">
+                    class="hidden sm:inline-block font-display text-2xl tracking-wide text-primary hover:text-primary-400 ">
                     Pick a Movie
                 </span>
             </a>

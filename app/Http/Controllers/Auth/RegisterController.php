@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -52,6 +52,15 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            // 'terms' => ['accepted'],
+        ], [
+            'name.required' => 'O Nome é obrigatório.',
+            'email.required' => 'O Email é obrigatório.',
+            'email.email' => 'Insira um Email válido.',
+            'email.unique' => 'Este Email já está em uso.',
+            'password.required' => 'Insira uma senha.',
+            'password.min' => 'A senha deve ter no mínimo 8 caracteres.',
+            'password.confirmed' => 'A confirmação da senha não corresponde.',
         ]);
     }
 
