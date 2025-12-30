@@ -21,6 +21,8 @@
     @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    @stack('styles')
+
 </head>
 
 <body class="bg-dark text-light transition-colors duration-500">
@@ -33,6 +35,8 @@
 
         @include('layouts.footer')
     </div>
+
+    @stack('scripts')
 </body>
 
 </html>
