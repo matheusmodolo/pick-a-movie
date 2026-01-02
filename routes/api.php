@@ -1,0 +1,9 @@
+<?php
+
+use App\Http\Controllers\OmdbController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/omdb/search', [OmdbController::class, 'search']);
+Route::get('/teste', function () {
+    return response()->json(['message' => 'Teste OK']);
+});
