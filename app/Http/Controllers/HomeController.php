@@ -21,8 +21,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function pesquisa()
     {
-        return view('app.movies');
+        return view('app.pesquisar');
     }
 }

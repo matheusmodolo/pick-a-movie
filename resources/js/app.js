@@ -21,6 +21,9 @@ app.component("example-component", ExampleComponent);
 import SearchMovies from "./components/SearchMovies.vue";
 app.component("search-movies", SearchMovies);
 
+import MovieModal from "./components/MovieModal.vue";
+app.component("movie-modal", MovieModal);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

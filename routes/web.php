@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return redirect()->route('dashboard');
+        return redirect()->route('pesquisa');
     } else {
         return view('welcome');
     }
@@ -16,4 +16,5 @@ Route::get('/about', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+Route::get('/buscar', [App\Http\Controllers\HomeController::class, 'pesquisa'])->name('pesquisa');
+Route::get('/lista', [App\Http\Controllers\HomeController::class, 'pesquisa'])->name('lista');
