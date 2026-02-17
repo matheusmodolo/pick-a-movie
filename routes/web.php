@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserMovieController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,3 +19,5 @@ Auth::routes();
 
 Route::get('/buscar', [App\Http\Controllers\HomeController::class, 'pesquisa'])->name('pesquisa');
 Route::get('/lista', [App\Http\Controllers\HomeController::class, 'pesquisa'])->name('lista');
+
+Route::resource('user-movies', UserMovieController::class)->only(['index', 'store', 'update', 'destroy']);

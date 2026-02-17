@@ -6,6 +6,7 @@
 
 import "./bootstrap";
 import { createApp } from "vue";
+import store from "./store";
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -14,12 +15,16 @@ import { createApp } from "vue";
  */
 
 const app = createApp({});
+app.use(store);
 
 import ExampleComponent from "./components/ExampleComponent.vue";
 app.component("example-component", ExampleComponent);
 
 import SearchMovies from "./components/SearchMovies.vue";
 app.component("search-movies", SearchMovies);
+
+import Watchlist from "./components/Watchlist.vue";
+app.component("watchlist", Watchlist);
 
 import MovieModal from "./components/MovieModal.vue";
 app.component("movie-modal", MovieModal);

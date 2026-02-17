@@ -71,10 +71,14 @@
                             </main>
 
                             <footer class="mt-4 flex items-center gap-3">
-                                <button @click="emitAdd" :disabled="isAdded"
-                                    class="flex-1 px-4 py-2 rounded-md text-sm font-medium transition"
-                                    :class="isAdded ? 'bg-gray-600 text-gray-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white'">
-                                    {{ isAdded ? 'Adicionado' : 'Adicionar à lista' }}
+                                <button @click="handleAdd" :disabled="isAdded || addingMovieId === details?.imdbID"
+                                    class="flex-1 px-4 py-2 rounded-md text-sm font-medium transition" :class="isAdded
+                                        ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                                        : addingMovieId === details?.imdbID
+                                            ? 'bg-yellow-600 text-white'
+                                            : 'bg-green-600 hover:bg-green-700 text-white'">
+                                    {{ isAdded ? 'Adicionado' : addingMovieId === details?.imdbID ? 'Adicionando...' :
+                                    'Adicionar à lista' }}
                                 </button>
 
                                 <button @click="close"
@@ -97,10 +101,15 @@ export default {
         show: { type: Boolean, default: false },
         details: { type: Object, default: null },
         id: { type: String, default: () => `${Math.random().toString(36).slice(2, 9)}` },
-        isAdded: { type: Boolean, default: false }, // se já está na watchlist (visual)
+        isAdded: { type: Boolean, default: false },
         loading: { type: Boolean, default: false }
     },
     emits: ['close', 'add'],
+    computed: {
+        addingMovieId() {
+            return this.$store.getters['watchlist/addingMovieId'];
+        },
+    },
     mounted() {
         // fecha com Esc
         this._handleKey = (e) => {
@@ -115,16 +124,15 @@ export default {
         close() {
             this.$emit('close');
         },
-        emitAdd() {
+        handleAdd() {
             if (!this.details) return;
             this.$emit('add', this.details);
-        }
+        },
     }
 };
 </script>
 
 <style scoped>
-/* simulação de transição simples */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
     transition: all 180ms ease;

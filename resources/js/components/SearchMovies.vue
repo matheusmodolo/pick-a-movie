@@ -33,11 +33,10 @@
                     </div>
 
                     <div class="mt-auto flex gap-2 items-center">
-                        <button @click="toggleWatchlist(movie)" :disabled="isInWatchlist(movie)"
-                            class="flex-1 px-3 py-2 text-sm rounded-lg font-medium hover:scale-105 shadow hover:shadow-lg transition ease-in-out disabled:opacity-50 duration-200"
-                            :class="isInWatchlist(movie) ? 'bg-gray-600 text-gray-300 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700 shadow shadow-green-600/50 hover:shadow-green-600/50'"
-                            :aria-pressed="isInWatchlist(movie) ? 'true' : 'false'">
-                            {{ isInWatchlist(movie) ? 'Adicionado' : 'Adicionar' }}
+                        <button @click="onModalAdd(movie)"
+                            :disabled="addingMovieId === movie.imdbID || isInWatchlist(movie)" class="...">
+                            {{ isInWatchlist(movie) ? 'Adicionado' : (addingMovieId === movie.imdbID ? 'Adicionando...'
+                                : 'Adicionar') }}
                         </button>
 
                         <button @click="viewDetails(movie)"
@@ -47,11 +46,19 @@
                     </div>
                 </div>
             </div>
+            <div class="bg-red-500 p-4">Paginação*</div>
+            <p class="text-gray-400 mt-4">
+                Total de resultados: {{ totalResults }}
+            </p>
         </div>
 
         <div v-else class="text-center text-gray-400 mt-8">
             Tente pesquisar um filme.
         </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <Watchlist />
     </div>
 
     <MovieModal :show="showModal" :details="selectedMovie" :loading="loadingDetails"
@@ -61,18 +68,18 @@
 <script>
 import axios from 'axios';
 import MovieModal from './MovieModal.vue';
+import Watchlist from './Watchlist.vue';
 
 export default {
-    components: { MovieModal },
+    components: { MovieModal, Watchlist },
     data() {
         return {
             busca: '',
             movies: [],
+            totalResults: 0,
             loading: false,
             error: null,
             placeholder: 'https://placehold.co/300x450?text=No+Image',
-            watchlist: [],
-            localStorageKey: 'meu_watchlist_v1',
 
             // modal
             showModal: false,
@@ -80,19 +87,47 @@ export default {
             loadingDetails: false,
         };
     },
+    computed: {
+        watchlist() {
+            return this.$store.state.watchlist.items;
+        },
+        addingMovieId() {
+            return this.$store.getters['watchlist/addingMovieId'];
+        },
+        storeError() {
+            return this.$store.getters['watchlist/error'];
+        },
+    },
     created() {
-        // carrega watchlist do localStorage
-        const raw = localStorage.getItem(this.localStorageKey);
-        if (raw) {
-            try {
-                this.watchlist = JSON.parse(raw);
-            } catch (e) {
-                console.warn('Erro ao ler watchlist do localStorage', e);
-                this.watchlist = [];
-            }
-        }
+        // Carrega a watchlist quando o componente é criado
+        this.$store.dispatch('watchlist/load');
     },
     methods: {
+        isInWatchlist(movie) {
+            if (!movie) return false;
+            const id = movie.imdbID || movie.movie_id || movie.imdbId;
+            return this.$store.getters['watchlist/isInWatchlist'](id);
+        },
+
+        async onModalAdd(details) {
+            console.log('Adicionando filme:', details);
+
+            // Previne duplicata
+            if (this.isInWatchlist(details)) {
+                console.log('Filme já adicionado');
+                this.showModal = false;
+                return;
+            }
+
+            // Usa a ação do store para adicionar
+            await this.$store.dispatch('watchlist/add', details);
+
+            // Fechar modal após adicionar com sucesso
+            if (!this.storeError) {
+                this.showModal = false;
+            }
+        },
+
         async searchMovies() {
             if (!this.busca || this.busca.trim().length < 1) {
                 this.error = 'Digite algo para pesquisar.';
@@ -107,10 +142,11 @@ export default {
                     params: { q: this.busca }
                 });
 
-                // segurança: garantimos que movies seja array
                 this.movies = Array.isArray(data.Search) ? data.Search : [];
-            } catch (err) {
+                this.totalResults = parseInt(data.totalResults) || 0;
 
+                console.log('Resposta da API:', data);
+            } catch (err) {
                 if (err.response) {
                     if (err.response.status === 404) {
                         this.error = 'Nenhum filme encontrado para essa busca.';
@@ -119,7 +155,6 @@ export default {
                     }
                 }
                 console.error('Erro na requisição:', err);
-
                 this.error = 'Erro ao buscar filmes. Tente novamente.';
                 this.movies = [];
             } finally {
@@ -127,62 +162,26 @@ export default {
             }
         },
 
-        // verifica se já está na lista (usa imdbID)
-        isInWatchlist(movie) {
-            return this.watchlist.some(m => m.imdbID === movie.imdbID);
-        },
-
-        // adiciona / remove (toggle) — aqui apenas adiciona, botão fica desabilitado se já adicionado
-        toggleWatchlist(movie) {
-            if (this.isInWatchlist(movie)) return;
-            this.watchlist.push({
-                imdbID: movie.imdbID,
-                Title: movie.Title,
-                Year: movie.Year,
-                Poster: movie.Poster
-            });
-            this.saveWatchlist();
-        },
-
-        saveWatchlist() {
-            try {
-                localStorage.setItem(this.localStorageKey, JSON.stringify(this.watchlist));
-            } catch (e) {
-                console.warn('Não foi possível salvar watchlist', e);
-            }
-        },
-
-        // exemplo de função para abrir detalhes (você pode adaptar)
         async viewDetails(movie) {
             this.loadingDetails = true;
             this.selectedMovie = null;
             try {
                 const { data } = await axios.get('/api/omdb/details/' + movie.imdbID);
-                // data é o objeto com detalhes (como no seu console)
                 this.selectedMovie = data;
-                // abrir modal
                 this.showModal = true;
+                console.log('Detalhes do filme:', data);
             } catch (err) {
                 console.error('Erro na requisição de detalhes:', err);
-                // opcional: mostrar erro para o usuário
                 this.error = 'Erro ao carregar detalhes do filme.';
             } finally {
                 this.loadingDetails = false;
             }
         },
 
-        // handlers para o modal
         onModalClose() {
             this.showModal = false;
             this.selectedMovie = null;
         },
-
-        async onModalAdd(details) {
-            // reutiliza sua função de adicionar
-            this.toggleWatchlist(details);
-            // opcional: fecha modal após adicionar
-            this.showModal = false;
-        }
     }
 };
 </script>
