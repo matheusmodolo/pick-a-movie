@@ -46,6 +46,7 @@ export const successToast = (title, message = "") => {
         icon: "success",
         background: "#1f2937",
         color: "#fff",
+        showCloseButton: true,
         toast: true,
         position: "bottom-end",
         showConfirmButton: false,

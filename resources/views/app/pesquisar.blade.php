@@ -9,6 +9,10 @@
 
                 <search-movies></search-movies>
 
+                <hr class="border-gray-700/50 max-w-6xl mx-auto p-0 rounded-lg" />
+
+                <Watchlist></Watchlist>
+
                 {{-- <div class="card mb-4">
                     <div class="card-body">
                         <div id="searchResults" class="mt-3"></div>

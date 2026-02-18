@@ -64,6 +64,8 @@ class UserMovieController extends Controller
             'tags' => $request->tags ?? null,
         ]);
 
+        $entry->load('movie'); // Carrega os detalhes do filme para retornar junto
+
         // opcional: se quiser retornar também dados do OMDB, você poderia buscar aqui e anexar
         return response()->json($entry, 201);
     }

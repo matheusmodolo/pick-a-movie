@@ -181,12 +181,12 @@ export default {
                 };
                 commit("SET_PAGINATION", paginationData);
 
-                console.log(
-                    "Watchlist carregada:",
-                    items,
-                    "Paginação:",
-                    paginationData,
-                );
+                // console.log(
+                //     "Watchlist carregada:",
+                //     items,
+                //     "Paginação:",
+                //     paginationData,
+                // );
             } catch (err) {
                 const errorMsg = "Erro ao carregar watchlist";
                 commit("SET_ERROR", errorMsg);
@@ -220,7 +220,7 @@ export default {
 
             try {
                 const { data } = await axios.post("/user-movies", movieDetails);
-                console.log("Resposta do servidor ao adicionar:", data);
+                // console.log("Resposta do servidor ao adicionar:", data);
 
                 // Garante que o objeto tenha a propriedade `movie` com dados
                 const serverEntry = data;
@@ -234,7 +234,6 @@ export default {
                 }
 
                 commit("ADD_ITEM", serverEntry);
-                console.log("Filme adicionado à watchlist");
             } catch (err) {
                 const errorMsg = "Erro ao adicionar na lista. Tente novamente.";
                 commit("SET_ERROR", errorMsg);
@@ -256,7 +255,6 @@ export default {
             try {
                 await axios.delete(`/user-movies/${entryId}`);
                 commit("REMOVE_ITEM", entryId);
-                console.log("Filme removido da watchlist");
             } catch (err) {
                 const errorMsg = "Não foi possível remover o filme.";
                 commit("SET_ERROR", errorMsg);
@@ -275,7 +273,6 @@ export default {
                     position: newPosition,
                 });
                 commit("UPDATE_ITEM", data);
-                console.log("Posição atualizada:", data);
             } catch (err) {
                 const errorMsg = "Erro ao atualizar posição.";
                 console.error(errorMsg, err);

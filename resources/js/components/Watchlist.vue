@@ -6,7 +6,7 @@
         </h2>
 
         <div v-if="loading" class="text-center text-gray-400">
-            Carregando watchlist...
+            Carregando lista...
         </div>
 
         <div v-else-if="watchlist.length" class="flex flex-col gap-4">
@@ -14,7 +14,6 @@
             <div class="grid grid-cols-1 gap-4">
                 <div v-for="entry in watchlist" :key="entry.id"
                     class="flex items-center justify-between bg-gray-800/50 rounded-lg p-4">
-
                     <div class="flex gap-4 flex-1">
                         <!-- Poster -->
                         <img v-if="entry.movie?.poster && entry.movie.poster !== 'N/A'" :src="entry.movie.poster"
@@ -132,10 +131,8 @@ export default {
         },
 
         async onModalAdd(details) {
-            console.log('Adicionando filme:', details);
-
             if (this.isInWatchlist(details)) {
-                console.log('Filme já adicionado');
+                // console.log('Filme já adicionado');
                 this.showModal = false;
                 return;
             }
@@ -148,14 +145,13 @@ export default {
         },
 
         async viewDetails(movie) {
-            console.log('movie:', movie);
             this.loadingDetails = true;
             this.selectedMovie = null;
             try {
                 const { data } = await axios.get('/api/omdb/details/' + movie.imdb_id);
                 this.selectedMovie = data;
                 this.showModal = true;
-                console.log('Detalhes do filme:', data);
+                // console.log('Detalhes do filme:', data);
             } catch (err) {
                 console.error('Erro na requisição de detalhes:', err);
             } finally {

@@ -3,17 +3,35 @@
         <!-- Search -->
         <div class="mb-6">
             <div class="flex flex-col sm:flex-row gap-3 items-center">
-                <input v-model="busca" @keyup.enter="searchMovies" placeholder="Pesquisar filmes..."
-                    class="flex-1 w-full px-4 py-3 rounded-lg bg-gray-800 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    autofocus />
+                <!-- wrapper relativo para posicionar o X -->
+                <div class="relative flex-1 w-full">
+                    <input ref="searchInput" v-model="busca" @keyup.enter="searchMovies"
+                        placeholder="Pesquisar filmes..."
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                        autofocus />
+
+                    <!-- botão X para limpar a busca -->
+                    <button v-if="movies.length > 0" @click="limparBusca" type="button"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition"
+                        aria-label="Limpar busca">
+                        <!-- ícone X simples -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
                 <button @click="searchMovies" :disabled="loading"
                     class="px-4 py-3 text-sm rounded-lg bg-primary-600 text-dark font-medium hover:bg-primary-600/90 hover:scale-105 shadow hover:shadow-lg hover:shadow-primary-600/50 shadow-primary-600/50 transition ease-in-out disabled:opacity-50 duration-200">
                     Buscar
                 </button>
             </div>
+
             <p v-if="loading" class="mt-2 text-sm text-gray-500">Buscando...</p>
             <p v-if="error" class="mt-2 text-sm text-red-400">{{ error }}</p>
         </div>
+
 
         <!-- Movies grid -->
         <div v-if="movies.length"
@@ -33,8 +51,7 @@
                     </div>
 
                     <div class="mt-auto flex gap-2 items-center">
-                        <button @click="onModalAdd(movie)"
-                            :disabled="addingMovieId === movie.imdbID || isInWatchlist(movie)"
+                        <button @click="onAdd(movie)" :disabled="addingMovieId === movie.imdbID || isInWatchlist(movie)"
                             class="px-3 py-2 text-sm rounded-lg bg-green-600 text-dark font-medium text-white hover:bg-green-600/90 hover:scale-105 shadow hover:shadow-lg hover:shadow-green-600/50 shadow-green-600/50 transition ease-in-out disabled:opacity-50 duration-200">
                             {{ isInWatchlist(movie) ? 'Adicionado' : (addingMovieId === movie.imdbID ? 'Adicionando...'
                                 : 'Adicionar') }}
@@ -49,17 +66,13 @@
             </div>
         </div>
 
-        <div v-else class="text-center text-gray-400 mt-8">
+        <!-- <div v-else class="text-center text-gray-400 mt-8">
             Tente pesquisar por um filme.
-        </div>
-    </div>
-
-    <div class="max-w-6xl mx-auto px-4 py-6">
-        <Watchlist />
+        </div> -->
     </div>
 
     <MovieModal :show="showModal" :details="selectedMovie" :loading="loadingDetails"
-        :isAdded="selectedMovie ? isInWatchlist(selectedMovie) : false" @close="onModalClose" @add="onModalAdd" />
+        :isAdded="selectedMovie ? isInWatchlist(selectedMovie) : false" @close="onModalClose" @add="onAdd" />
 </template>
 
 <script>
@@ -100,18 +113,28 @@ export default {
         this.$store.dispatch('watchlist/load');
     },
     methods: {
+        limparBusca() {
+            this.busca = '';
+            this.movies = [];
+            this.error = null;
+            this.$refs.searchInput.focus();
+            // refoca o input
+            this.$nextTick(() => {
+                if (this.$refs.searchInput && typeof this.$refs.searchInput.focus === 'function') {
+                    this.$refs.searchInput.focus();
+                }
+            });
+        },
         isInWatchlist(movie) {
             if (!movie) return false;
             const id = movie.imdbID || movie.movie_id || movie.imdbId;
             return this.$store.getters['watchlist/isInWatchlist'](id);
         },
 
-        async onModalAdd(details) {
-            console.log('Adicionando filme:', details);
-
+        async onAdd(details) {
             // Previne duplicata
             if (this.isInWatchlist(details)) {
-                console.log('Filme já adicionado');
+                // console.log('Filme já adicionado');
                 this.showModal = false;
                 return;
             }
@@ -141,8 +164,6 @@ export default {
 
                 this.movies = Array.isArray(data.Search) ? data.Search : [];
                 this.totalResults = parseInt(data.totalResults) || 0;
-
-                console.log('Resposta da API:', data);
             } catch (err) {
                 if (err.response) {
                     if (err.response.status === 404) {
@@ -166,7 +187,7 @@ export default {
                 const { data } = await axios.get('/api/omdb/details/' + movie.imdbID);
                 this.selectedMovie = data;
                 this.showModal = true;
-                console.log('Detalhes do filme:', data);
+                // console.log('Detalhes do filme:', data);
             } catch (err) {
                 console.error('Erro na requisição de detalhes:', err);
                 this.error = 'Erro ao carregar detalhes do filme.';
