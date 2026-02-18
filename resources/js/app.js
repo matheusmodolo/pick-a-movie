@@ -7,6 +7,7 @@
 import "./bootstrap";
 import { createApp } from "vue";
 import store from "./store";
+import Swal from "./config/sweetalert";
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -16,6 +17,9 @@ import store from "./store";
 
 const app = createApp({});
 app.use(store);
+
+// Disponibiliza o Swal globalmente
+app.config.globalProperties.$swal = Swal;
 
 import ExampleComponent from "./components/ExampleComponent.vue";
 app.component("example-component", ExampleComponent);

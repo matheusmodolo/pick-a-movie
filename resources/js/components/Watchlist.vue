@@ -65,6 +65,7 @@
 import axios from 'axios';
 import MovieModal from './MovieModal.vue';
 import Pagination from './Pagination.vue';
+import { confirmAlert, successToast } from '../config/sweetalert';
 
 export default {
     components: { MovieModal, Pagination },
@@ -111,13 +112,19 @@ export default {
         },
 
         async removeMovie(entryId) {
-            const confirmed = window.confirm('Tem certeza que deseja remover este filme?');
-            if (!confirmed) return;
+            const confirmed = await confirmAlert(
+                'Remover filme?',
+                'Tem certeza que deseja remover este filme da sua lista?'
+            );
+
+            if (!confirmed.isConfirmed) return;
 
             await this.$store.dispatch('watchlist/remove', entryId);
 
             // Recarrega a página atual após remover
             this.$store.dispatch('watchlist/load', this.pagination.current_page);
+
+            successToast('Filme removido com sucesso!');
         },
 
         async onPageChanged(page) {
