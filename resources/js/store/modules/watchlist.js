@@ -9,6 +9,12 @@ export default {
             loading: false,
             error: null,
             addingMovieId: null,
+            pagination: {
+                current_page: 1,
+                per_page: 10,
+                total: 0,
+                last_page: 1,
+            },
         };
     },
 
@@ -58,6 +64,11 @@ export default {
          * Retorna mensagem de erro
          */
         error: (state) => state.error,
+
+        /**
+         * Retorna dados de paginação
+         */
+        pagination: (state) => state.pagination,
     },
 
     mutations: {
@@ -129,21 +140,53 @@ export default {
         CLEAR_ERROR(state) {
             state.error = null;
         },
+
+        /**
+         * Define dados de paginação
+         */
+        SET_PAGINATION(state, pagination) {
+            state.pagination = {
+                current_page: pagination.current_page || 1,
+                per_page: pagination.per_page || 10,
+                total: pagination.total || 0,
+                last_page: pagination.last_page || 1,
+            };
+        },
     },
 
     actions: {
         /**
          * Carrega a watchlist do servidor
+         * @param {number} page - Número da página (padrão: 1)
          */
-        async load({ commit }) {
+        async load({ commit }, page = 1) {
             commit("SET_LOADING", true);
             commit("CLEAR_ERROR");
 
             try {
-                const { data } = await axios.get("/user-movies");
+                const { data } = await axios.get("/user-movies", {
+                    params: { page },
+                });
+
+                // Handle resposta paginada do Laravel
                 const items = Array.isArray(data.data) ? data.data : [];
                 commit("SET_ITEMS", items);
-                console.log("Watchlist carregada:", items);
+
+                // Armazena informações de paginação (sempre, mesmo que vazio)
+                const paginationData = data.meta || {
+                    current_page: 1,
+                    per_page: 10,
+                    total: items.length,
+                    last_page: 1,
+                };
+                commit("SET_PAGINATION", paginationData);
+
+                console.log(
+                    "Watchlist carregada:",
+                    items,
+                    "Paginação:",
+                    paginationData,
+                );
             } catch (err) {
                 const errorMsg = "Erro ao carregar watchlist";
                 commit("SET_ERROR", errorMsg);

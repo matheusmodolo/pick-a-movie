@@ -15,4 +15,8 @@ class Movie extends Model
         'poster',
         'metadata',
     ];
+
+    public $timestamps = true;
+
+    protected $dateFormat = 'd/m/Y H:i:s';
 }

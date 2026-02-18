@@ -11,14 +11,25 @@ class UserMovieController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        // retorna registros do usuário incluindo detalhes do filme (se você guardar/cache)
-        // Aqui assumimos que não há tabela movies — então retornamos o registro e, opcionalmente, você pode anexar dados do OMDB.
+        $perPage = $request->query('per_page', 10);
+        $page = $request->query('page', 1);
+
+        // retorna registros do usuário incluindo detalhes do filme
         $list = UserMovie::with('movie')
             ->where('user_id', $user->id)
             ->orderBy('positions')
-            ->paginate(15);
+            ->paginate($perPage, ['*'], 'page', $page);
 
-        return response()->json($list);
+        // Retorna no formato esperado pelo frontend
+        return response()->json([
+            'data' => $list->items(),
+            'meta' => [
+                'current_page' => $list->currentPage(),
+                'per_page' => $list->perPage(),
+                'total' => $list->total(),
+                'last_page' => $list->lastPage(),
+            ]
+        ]);
     }
 
     public function store(Request $request)

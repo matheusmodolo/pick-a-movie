@@ -3,7 +3,7 @@
         <!-- Search -->
         <div class="mb-6">
             <div class="flex flex-col sm:flex-row gap-3 items-center">
-                <input v-model="busca" @keyup.enter="searchMovies" placeholder="Pesquisar Filmes..."
+                <input v-model="busca" @keyup.enter="searchMovies" placeholder="Pesquisar filmes..."
                     class="flex-1 w-full px-4 py-3 rounded-lg bg-gray-800 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                     autofocus />
                 <button @click="searchMovies" :disabled="loading"
@@ -34,7 +34,8 @@
 
                     <div class="mt-auto flex gap-2 items-center">
                         <button @click="onModalAdd(movie)"
-                            :disabled="addingMovieId === movie.imdbID || isInWatchlist(movie)" class="...">
+                            :disabled="addingMovieId === movie.imdbID || isInWatchlist(movie)"
+                            class="px-3 py-2 text-sm rounded-lg bg-green-600 text-dark font-medium text-white hover:bg-green-600/90 hover:scale-105 shadow hover:shadow-lg hover:shadow-green-600/50 shadow-green-600/50 transition ease-in-out disabled:opacity-50 duration-200">
                             {{ isInWatchlist(movie) ? 'Adicionado' : (addingMovieId === movie.imdbID ? 'Adicionando...'
                                 : 'Adicionar') }}
                         </button>
@@ -46,14 +47,10 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-red-500 p-4">Paginação*</div>
-            <p class="text-gray-400 mt-4">
-                Total de resultados: {{ totalResults }}
-            </p>
         </div>
 
         <div v-else class="text-center text-gray-400 mt-8">
-            Tente pesquisar um filme.
+            Tente pesquisar por um filme.
         </div>
     </div>
 

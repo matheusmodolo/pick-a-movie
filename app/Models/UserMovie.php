@@ -18,6 +18,8 @@ class UserMovie extends Model
 
     public $timestamps = true;
 
+    protected $dateFormat = 'd/m/Y H:i:s';
+
     public function movie()
     {
         return $this->belongsTo(Movie::class, 'movie_id');
