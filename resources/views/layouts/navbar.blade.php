@@ -5,11 +5,11 @@
             'label' => 'Minha Lista',
             'icon' => 'list',
         ],
-        [
-            'route' => 'pesquisa',
-            'label' => 'Pesquisar',
-            'icon' => 'search',
-        ],
+        // [
+        //     'route' => 'pesquisa',
+        //     'label' => 'Pesquisar',
+        //     'icon' => 'search',
+        // ],
         // [
         //     'route' => 'merge',
         //     'label' => 'Merge',
